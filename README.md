@@ -1,5 +1,19 @@
 乌东德.md
 
+## 说明
+> usr_main：
+* websocket数据收发测试程序，使用makefile需要配置环境变量指定lws库文件；	
+* 程序当前连接[WebSocket 在线测试](http://www.websocket-test.com)服务端，自行修改；	
+* 
+> libwebsockets-x86：		
+* 编译后的lws源文件，其中：	
+*   01_test_bulid/01_lws_api/*	库文件	
+*   01_test_bulid/02_lws_demo/*	minimal示例程序	
+*   01_test_bulid/03_lws_wdd/*	业务程序	
+
+
+## 
+
 ## 参考文献
 **lws官方例程**	
 * build后的测试程序(build/bin/*)：	
@@ -11,7 +25,7 @@
 	minimal-examples-lowlevel/ws-client/minimal-ws-client-rx/minimal-ws-client.c	
 
 **安装教程**
-- [Git-libwebsockets](https://github.com/warmcat/libwebsockets)
+- [Git-libwebsockets下载](https://github.com/warmcat/libwebsockets)
 - [libwebsockets简介](https://blog.csdn.net/u013780605/article/details/79489183)
 - [测试环境搭建&源码讲解](https://blog.csdn.net/fantasysolo/article/details/88908948)
 - [交叉编译](https://blog.csdn.net/lx121451/article/details/78717366)
