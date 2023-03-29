@@ -2,17 +2,17 @@
 
 ## 说明
 > usr_main：
-* websocket数据收发测试程序，使用makefile需要配置环境变量指定lws库文件；	
-* 程序当前连接[WebSocket 在线测试](http://www.websocket-test.com)服务端，自行修改；	
-* 
+> * websocket数据收发测试程序，使用makefile需要配置环境变量指定lws库文件；
+> * 程序当前连接[WebSocket 在线测试](http://www.websocket-test.com)服务端，自行修改；
+	
 > libwebsockets-x86：		
-* 编译后的lws源文件，其中：	
-*   01_test_bulid/01_lws_api/*	库文件	
-*   01_test_bulid/02_lws_demo/*	minimal示例程序	
-*   01_test_bulid/03_lws_wdd/*	业务程序	
+> * 编译后的lws源文件，其中：	
+> *   01_test_bulid/01_lws_api/*	库文件	
+> *   01_test_bulid/02_lws_demo/*	minimal示例程序	
+> *   01_test_bulid/03_lws_wdd/*	业务程序	
 
-
-## 
+## 程序介绍
+- [usr_main函数]./usr_main/readme.md
 
 ## 参考文献
 **lws官方例程**	
@@ -206,7 +206,7 @@ SET(CMAKE_C_COMPILER_WORKS TRUE)
 SET(CMAKE_CXX_COMPILER_WORKS TRUE)
 
 ## 总则
-	OBJ： 开发过程中，对程序的描述。为便于自己的回溯，文章有很多哆嗦的地方
+	OBJ： 开发过程中，对程序的描述。为便于自己回溯，文章和源码会比较哆嗦
 
 
 
