@@ -12,7 +12,7 @@
 > *   01_test_bulid/03_lws_wdd/*	业务程序	
 
 ## 程序介绍
-- [usr_main函数]./usr_main/readme.md
+- [usr_main函数](./usr_main/readme.md)
 
 ## 参考文献
 **lws官方例程**	
