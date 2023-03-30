@@ -1,5 +1,10 @@
 乌东德.md
 
+## 用法
+cd usr_main;
+make;
+echo "配置环境变量：./libwebsockets-x86/lib/"
+
 ## 说明
 > usr_main：
 > * websocket数据收发测试程序，使用makefile需要配置环境变量指定lws库文件；
@@ -204,6 +209,11 @@ SET(CMAKE_CXX_FLAGS"${CMAKE_CXX_FLAGS} --sysroot=/opt/fsl-imx-x11/4.1.15-2.0.0/s
 SET(CMAKE_C_COMPILER_WORKS TRUE)
 
 SET(CMAKE_CXX_COMPILER_WORKS TRUE)
+
+## FIX
+1. 添加交叉编译CMAKE
+2. 完善协议callbake
+3. 服务端demo程序
 
 ## 总则
 	OBJ： 开发过程中，对程序的描述。为便于自己回溯，文章和源码会比较哆嗦

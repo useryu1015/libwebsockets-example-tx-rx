@@ -5,20 +5,21 @@
 #	source： 源文件路径
 TARGET	:= proc_test
 CC	:= gcc
-CFLAGS  = -g -Wall $(INCS_P) $(LIB_P)	#1 设置编译选项：		# 在编译.c文件时	#-I:指定头文件路径 -L:指定库文件路径 -Wl,R:动态链接lib库
-LDFLAGS	= -lssl -lcrypto -lpthread -lm $(lib)    	#2 指定链接器要链接那些库文件	# 在链接.o文件时
+CFLAGS  = -g -Wall $(INCS_P) 				#1 设置编译选项：		# 在编译.c文件时	#-I:指定头文件路径 -L:指定库文件路径 -Wl,R:动态链接lib库
+LDFLAGS	= -lcrypto -lpthread -lm $(lib) $(LIB_P)  	#2 指定链接器要链接那些库文件	# 在链接.o文件时
 # -lssl -lcrypto			如果交叉编译依赖此库怎么处理？？？
 
 
 # 			指定项目头文件和源文件路径		 #
-include := ./ #../lib_modbus_src
+include := ./ ../libwebsockets-x86/include #../lib_modbus_src
 source  := ./ #../lib_modbus_src
 #			指定不编译的文件				#
-src_out := #./cpp_bak.c #./realtime/source/rtdb_gdw376.c ./commons/test/*.c ./config/test/*.c ./mqtt/test/*.c ./realtime/test/*.c ./modbus/test/*.c
+src_out := #./libwebsockets-x86/* #./cpp_bak.c #./realtime/source/rtdb_gdw376.c ./commons/test/*.c ./config/test/*.c ./mqtt/test/*.c ./realtime/test/*.c ./modbus/test/*.c
 
 #			指定库文件和路径				#
-lib		:= -lwebsockets
-LIB_P	:= -L./lib				# tips: /test_file/lib-->/lib-->/usr/lib-->/usr/local/lib
+lib	:= -lwebsockets -lssl
+LIB_P	:= -L../libwebsockets-x86/lib		# tips: /test_file/lib-->/lib-->/usr/lib-->/usr/local/lib
+
 
 ## 添加链接器-I文件路径
 incs := $(shell find ${include} -name "*.h")    # 1、获取当前目录下，所有.h文件
@@ -33,7 +34,7 @@ srcs := $(filter-out $(src_out),$(srcs))    # 过滤源文件
 OBJS := $(patsubst %.c,%.o,$(srcs))             # 汇编：替换(编译)所有%.c -> %.o
 
 $(TARGET): $(OBJS)
-	gcc $^ -o $@ $(LDFLAGS) -I../include -L../lib
+	gcc $^ -o $@ $(LDFLAGS)  
 
 
 

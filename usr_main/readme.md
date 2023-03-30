@@ -22,10 +22,14 @@ lws_send_pipe_choked(wsi);// 如果ws连接阻塞，则返回1，否则返回0�
 ```
 ### test业务程序
 ``` C
+/* init */
 test_callback();    // 
 ws_prot_regist();   // 业务子协议栈注册
 ws_prot_pthread_creat();
-test_callbake_msgHandle();  // 数据收发
+
+/* run */
+test_callbake_msgHandle(); // 数据收发测试，业务线程
+ws_send_msg();       // 向ws对端发送数据
 ```
 
 

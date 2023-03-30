@@ -127,7 +127,10 @@ int test_callback( struct lws *wsi, enum lws_callback_reasons reason, void *user
 
 
 int callback2( struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len ) {
-
+    ws_sub_protocol_t *vhd = &ws_prot[PROTOCOL_TEST_CALLBACK];   // ws_get_substack(lws_get_protocol(wsi), __func__);
+    char *dbuf = (char *)user;
+    int rtn;
+    
     switch ( reason ) {
         case LWS_CALLBACK_FILTER_PROTOCOL_CONNECTION:
             break;
@@ -138,9 +141,6 @@ int callback2( struct lws *wsi, enum lws_callback_reasons reason, void *user, vo
             lwsl_notice( "Rx: %s\n", (char *) in );
             break;
         case LWS_CALLBACK_CLIENT_WRITEABLE:     // 当此客户端可以发送数据时的回调
-            // uint8_t sbuf[128] = "hello ws_send_msg END";
-            // ws_send_msg(wsi, sbuf, strlen(sbuf));
-
             // sleep(5);           // ques: 验证 回调做阻塞操作的影响
             // zlog_info("lws_get_peer_write_allowance运行发送字节数 %d ", 
             //         lws_get_peer_write_allowance(wsi));// 如果有发送字节限制，则返回正数；如果无发送字节限制，则返回-1。
