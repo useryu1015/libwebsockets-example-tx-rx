@@ -41,7 +41,7 @@ static int protocol_my_callback( struct lws *wsi, enum lws_callback_reasons reas
             // 业务处理部分，为了实现Echo服务器，把客户端数据保存起来
             memcpy( &data->buf[ LWS_PRE ], in, len );
             data->len = len;
-            printf("recvied message:%s\n",in);
+            printf("recvied message:%s\nend \n",in);
  
             // 需要给客户端应答时，触发一次写回调
             lws_callback_on_writable( wsi );
@@ -64,7 +64,7 @@ static int protocol_my_callback( struct lws *wsi, enum lws_callback_reasons reas
 struct lws_protocols protocols[] = {
     {
         //协议名称，协议回调，接收缓冲区大小
-        "ws", protocol_my_callback, sizeof( struct session_data ), MAX_PAYLOAD_SIZE,
+        "protocol_test_callback", protocol_my_callback, sizeof( struct session_data ), MAX_PAYLOAD_SIZE,
     },
     {
         NULL, NULL,   0 // 最后一个元素固定为此格式

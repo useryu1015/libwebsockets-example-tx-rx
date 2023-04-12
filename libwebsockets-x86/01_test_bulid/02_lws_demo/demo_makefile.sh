@@ -5,6 +5,7 @@ libdir=../
 
 # # 测试服务端
 # gcc -o -g server server.c -I../include -L../lib -lwebsockets
+gcc server.c -o server -I../include -L../lib -lwebsockets -g
 
 # # 测试客户端
 # gcc -o -g client client.c -I../include -L../lib -lwebsockets
@@ -15,6 +16,6 @@ libdir=../
 
 
 # 封装 客户端
-gcc -o srv_client srv_websocket_client.c -I../include -L../lib -lwebsockets
+# gcc -o srv_client srv_websocket_client.c -I../include -L../lib -lwebsockets
 
 
