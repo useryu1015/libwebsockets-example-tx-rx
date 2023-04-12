@@ -14,6 +14,12 @@ extern "C"
 {
 #endif
 
+        typedef struct _enum_color_t
+        {
+                int id;
+                const char *color;
+        } enum_color_t;
+        
         typedef struct _zlog_config_t
         {
                 unsigned short tagid;
@@ -86,7 +92,7 @@ extern "C"
         hlog(__FILE__, _func, __LINE__, ZLOG_LEVEL_TRACE, buf, buflen)
 
 #define hzlog_info(str, buf, buflen) \
-		hzlog(__FILE__, _func, __LINE__, ZLOG_LEVEL_INFO, str, buf, buflen)
+        hzlog(__FILE__, _func, __LINE__, ZLOG_LEVEL_INFO, str, buf, buflen)
 
 #define hflog_fatal(buf, buflen, fd) \
         hflog(__FILE__, _func, __LINE__, ZLOG_LEVEL_FATAL, buf, buflen, fd)

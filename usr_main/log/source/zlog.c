@@ -61,6 +61,42 @@ static _Bool is_filter_accept(const char *file, const char *func, int line, int 
 	}
 }
 
+#define LOG_COLOURS_
+#ifdef LOG_COLOURS_
+static const enum_color_t log_colours[] = {
+		{ZLOG_LEVEL_ERROR, "[31;1m"}, /* LLL_ERR */
+		{ZLOG_LEVEL_WARN, "[36;1m"}, /* LLL_WARN */
+		{ZLOG_LEVEL_TRACE,  "[35;1m"}, /* LLL_NOTICE */
+		// {ZLOG_LEVEL_INFO, "[32;1m"}, /* LLL_INFO */
+		{ZLOG_LEVEL_INFO, "[0m"}, /* LLL_INFO */
+		{ZLOG_LEVEL_DEBUG, "[34;1m"}, /* LLL_DEBUG */
+		{ZLOG_LEVEL_FATAL, "[31;1m"}
+		// "[33;1m", /* LLL_PARSER */
+		// "[33m", /* LLL_HEADER */
+		// "[33m", /* LLL_EXT */
+		// "[33m", /* LLL_CLIENT */
+		// "[33;1m", /* LLL_LATENCY */
+		// "[0;1m", /* LLL_USER */
+		// "[31m", /* LLL_THREAD */
+};
+
+// inline const char *get_color_by_level(int id)		// fix: inline在aarch中报错
+const char *get_color_by_level(int id)
+{
+    int i = 0, cnt = sizeof(log_colours) / sizeof(log_colours[0]);
+
+    for (; i < cnt; ++i)
+    {
+        if (id == log_colours[i].id)
+        {
+            return log_colours[i].color;
+        }
+    }
+
+    return ("[0m");
+}
+#endif
+
 static void _log(FILE* fp, const char *file, const char *func, int line, int level) {
 	time_t sys_time;
 	struct tm sys_tm;
@@ -84,18 +120,25 @@ void zlog(const char *file, const char *func, int line, int level, const char *f
 	const char* sfile = get_simple_file(file);
 
 	if (is_filter_accept(file, func, line, level)) {
-		FILE* fp = level < ZLOG_LEVEL_WARN ? stdout : stderr;
+		FILE* fp = level < ZLOG_LEVEL_WARN ? stdout : stdout;
+		// FILE* fp = level < ZLOG_LEVEL_WARN ? stdout : stderr;		// fix: stderr无缓冲输出不能正常打印颜色
 
 #ifdef __linux__
 		pthread_mutex_lock(&_log_mutex);
 #endif
 		do {
+#ifdef LOG_COLOURS_
+			printf("\x1b%s", get_color_by_level(level));
+#endif
 			_log(fp, sfile, func, line, level);
 
 			va_start(args, format);
 			vfprintf(fp, format, args);
 			va_end(args);
 
+#ifdef LOG_COLOURS_
+			printf("\x1b[0m");
+#endif
 			fprintf(fp, "\n");
 			fflush(fp);
 		} while (0);

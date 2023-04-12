@@ -51,12 +51,14 @@ typedef struct _ws_io_cache_t {
 // lws 自定义子协议栈
 typedef struct _ws_sub_protocol_t
 {
+	struct lws_client_connect_info *conn_info;	// 客户端连接信息
 	struct lws *wsi_multi;		// 协议接口                         // if (wsi == wsi_multi[n])
     unsigned int rl_multi;		// 连接时间 realtime
     const char *prot_name;		// 协议名称
     
 // 1) 通过user寄存收发数据	
 	void *p_user;				// user ponit
+	int user_len;
 
 // 2) 通过lws数据结构, 处理收发数据
 	pthread_t pthread_spam;		// 业务线程
