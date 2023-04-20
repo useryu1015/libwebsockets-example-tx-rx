@@ -67,6 +67,10 @@ struct lws_protocols protocols[] = {
         "protocol_test_callback", protocol_my_callback, sizeof( struct session_data ), MAX_PAYLOAD_SIZE,
     },
     {
+        //协议名称，协议回调，接收缓冲区大小
+        "test_callback", protocol_my_callback, sizeof( struct session_data ), MAX_PAYLOAD_SIZE,
+    },
+    {
         NULL, NULL,   0 // 最后一个元素固定为此格式
     },
     LWS_PROTOCOL_LIST_TERM

@@ -15,7 +15,7 @@ struct session_data ws_writeable = {0};
 # define LOG_TEST   \
     if ( user ) {   \
         zlog_warn("LOG_TEST: %s", __func__);  \
-        zlog_warn("    callbake ohter reason %d  ", reason);    \
+        zlog_warn(" calllback other reason %d  ", reason);    \
     }
 
 
@@ -32,7 +32,7 @@ inline int _ws_send_msg(struct lws *wsi, uint8_t * msg, int len)
     memmove(&sbuf[ LWS_PRE ], msg, len);
 
     zlog_info("send[%d]: %s", len, &sbuf[ LWS_PRE ]);
-    rlen = lws_write( wsi, &sbuf[ LWS_PRE ], len, LWS_WRITE_TEXT );         // event LWS_CALLBACK_CLIENT_WRITEABLE 
+    rlen = lws_write( wsi, &sbuf[ LWS_PRE ], len, LWS_WRITE_BINARY );         // event LWS_CALLBACK_CLIENT_WRITEABLE 
 
     return rlen;
 }
@@ -74,7 +74,7 @@ ws_sub_protocol_t * ws_get_substack()
  * in 某些事件使用此参数，作为传入数据的指针
  * len 某些事件使用此参数，说明传入数据的长度
  */
-int test_callback( struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len ) 
+int protocol_test_callback( struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len ) 
 {
     ws_sub_protocol_t *vhd = &ws_prot[PROTOCOL_TEST_CALLBACK];   // ws_get_substack(lws_get_protocol(wsi), __func__);
     char *pusr = (char *)user;
@@ -104,10 +104,12 @@ int test_callback( struct lws *wsi, enum lws_callback_reasons reason, void *user
             zlog_trace( "Rx: %s", (char *) in );            
             
             pthread_mutex_lock(&vhd->lock_ring); /* --------- ring lock { */
-            vhd->user_len = len;
+            memset(vhd->p_user, 0 , WS_TX_MAX_LEN);
             memmove(pusr, in, len);
-            vhd->user_state = USER_RX;
             
+            vhd->user_len = len;
+            vhd->user_state = USER_RX;
+
             pthread_mutex_unlock(&vhd->lock_ring); /* } ring lock */
             break;
         case LWS_CALLBACK_CLIENT_WRITEABLE:     // 当此客户端可以发送数据时的回调
@@ -121,10 +123,12 @@ int test_callback( struct lws *wsi, enum lws_callback_reasons reason, void *user
 
             pthread_mutex_unlock(&vhd->lock_ring); /* } ring lock */
             break;
-        case LWS_CALLBACK_CLIENT_CLOSED:
         case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
+		    zlog_error("CLIENT_CONNECTION_ERROR: %s ",
+			 in ? (char *)in : "(null)");        
+        case LWS_CALLBACK_CLIENT_CLOSED:        
             // 置空,便于重新连接 重新拉起
-            zlog_error("连接关闭或者中断   ");
+            zlog_error("连接关闭");
             vhd->wsi_multi = NULL;      // 断开后lws自动销毁
 		    vhd->established = 0;
             vhd->pthread_state = 0;
@@ -205,8 +209,10 @@ int srv_callback( struct lws *wsi, enum lws_callback_reasons reason, void *user,
  */
 static const struct lws_protocols protocols[] = {
 	{
-		"protocol_test_callback",       // 协议的名称
-		test_callback,                  // 对应的回调函数
+		// "protocol_test_callback",       // 协议的名称
+		"test_callback",       // 协议的名称
+		// "",       // 协议的名称
+		protocol_test_callback,                  // 对应的回调函数
 		sizeof( struct session_data ),  // user堆栈大小； 在子协议初始化成功后lws内核才会分配内存
         4096,                           // 接收缓存区大小
         0, 
@@ -236,8 +242,8 @@ int ws_prot_regist(ws_sub_protocol_t *p_wsi, struct lws_client_connect_info *i)
     if (!i && !p_wsi)
         return -1;
 
-    // for (n = 0; n < WS_SUB_PROTOCOL_NUM && n<1; n++) {
-    for (n = 0; n < WS_SUB_PROTOCOL_NUM; n++) {
+    for (n = 0; n < WS_SUB_PROTOCOL_NUM && n<1; n++) {
+    // for (n = 0; n < WS_SUB_PROTOCOL_NUM; n++) {
         if (!p_wsi[n].wsi_multi /*&& ratelimit_connects(&p_wsi[n].rl_multi, 2u)*/) {
             p_wsi[n].prot_name = protocols[n].name;
             p_wsi[n].p_user = malloc(LWS_PRE + WS_TX_MAX_LEN);
@@ -354,19 +360,18 @@ int main() {
 
     // memmove(ws_writeable.buf, "hello im writeabel", 128);
     // ctx_info.user = ws_writeable.buf;           // 全局指针
-    
-    // ssl支持（指定CA证书、客户端证书及私钥路径，打开ssl支持）
-    // ctx_info.ssl_ca_filepath = "../ca/ca-cert.pem";
-    // ctx_info.ssl_cert_filepath = "./client-cert.pem";
-    // ctx_info.ssl_private_key_filepath = "./client-key.pem";
-    // ctx_info.options |= LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
  
     struct lws_context *context = lws_create_context( &ctx_info );
 
     // char address[] = "121.40.165.18";
     // int port = 8800;
-    char address[] = "192.168.101.73";
-    int port = 8000;
+    // char address[] = "192.168.101.73";
+    // int port = 8000;
+    /* http://172.17.68.125:8101/  这个是公司服务器部署demo  */
+    char address[] = "172.17.68.125";
+    // char address[] = "192.168.101.33";
+    int port = 10100;
+    // int port = 8101;
     char addr_port[256] = { 0 };
     sprintf(addr_port, "%s:%u", address, port & 65535 );
 
@@ -376,7 +381,7 @@ int main() {
     conn_info.address = address;
     conn_info.port = port;
     conn_info.ssl_connection = 0;               // 关闭ssl
-    conn_info.path = "./";
+    conn_info.path = "websocket";
     conn_info.host = addr_port;
     conn_info.origin = addr_port;
 
@@ -389,8 +394,8 @@ int main() {
     while (!exit_sig) {
         lws_service(context, 0);
 
-        ws_client_monitor(ws_prot);         // 重连
-        usleep(10 * 1000);                  // 查看cpu占用 top       避免长阻塞操作
+        // ws_client_monitor(ws_prot);         // 重连
+        // usleep(10 * 1000);                  // 查看cpu占用 top       避免长阻塞操作
     }
 
     // 销毁上下文对象

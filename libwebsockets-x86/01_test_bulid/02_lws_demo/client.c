@@ -219,10 +219,12 @@ int main() {
     if (!context) {
     // 创建失败，处理错误
     }
- 
+     char address[] = "172.17.68.125";
+    // int port = 10100;
+    int port = 8101;
     // char address[] = "127.0.0.1";
-    char address[] = "121.40.165.18"; 
-    int port = 8800;
+    // char address[] = "121.40.165.18"; 
+    // int port = 8800;
     // char address[] = "192.168.101.73";     
     // int port = 8000;
     char addr_port[256] = { 0 };

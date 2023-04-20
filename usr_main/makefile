@@ -11,14 +11,14 @@ LDFLAGS	= -lcrypto -lpthread -lm $(lib) $(LIB_P)  	#2 指定链接器要链接�
 
 
 # 			指定项目头文件和源文件路径		 #
-include := ./ ../libwebsockets-x86/include #../lib_modbus_src
-source  := ./ #../lib_modbus_src
+include := ./ ../log/include #../libwebsockets-x86/include #../lib_modbus_src
+source  := ./ ../log #../lib_modbus_src
 #			指定不编译的文件				#
 src_out := #./libwebsockets-x86/* #./cpp_bak.c #./realtime/source/rtdb_gdw376.c ./commons/test/*.c ./config/test/*.c ./mqtt/test/*.c ./realtime/test/*.c ./modbus/test/*.c
 
 #			指定库文件和路径				#
 lib	:= -lwebsockets -lssl
-LIB_P	:= -L../libwebsockets-x86/lib		# tips: /test_file/lib-->/lib-->/usr/lib-->/usr/local/lib
+LIB_P	:= -L./lib		# tips: /test_file/lib-->/lib-->/usr/lib-->/usr/local/lib
 
 
 ## 添加链接器-I文件路径

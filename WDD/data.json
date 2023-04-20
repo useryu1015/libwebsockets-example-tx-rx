@@ -1,0 +1,17 @@
+{
+    "json": {
+        "name": "terminal1",
+        "id": "202303110001xl",
+        "terminal": "COL",
+        "mtype": "MSGE",
+        "t": "2023-04-05 09:28:47.475",
+        "params": [
+        {
+            "kks": "kkstest",
+            "ref": "reff1",
+            "val": "0.56-Mpa",
+            "t": "2023-04-05 09:28:47.872"
+        }
+        ]
+    }
+}

@@ -818,7 +818,7 @@ int main(int argc, char **argv)
 	 * instantiates the connection logically, lws_service() progresses it
 	 * asynchronously.
 	 */
-printf("赵  test \n\n\n");
+
 	// 画随机圆圈
 	m = 0;
 	while (!force_exit) {

@@ -8,7 +8,7 @@ libdir=../
 gcc server.c -o server -I../include -L../lib -lwebsockets -g
 
 # # 测试客户端
-# gcc -o -g client client.c -I../include -L../lib -lwebsockets
+gcc -o client client.c -I../include -L../lib -lwebsockets
 
 
 # # 测试队列
